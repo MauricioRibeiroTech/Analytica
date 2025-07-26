@@ -97,7 +97,7 @@ python analisador_bacias_lote.py ./output_dir results.csv boundaries.csv
 ### Numerical Parameters
 | Parameter | Value | Description |
 |-----------|-------|-------------|
-| ODE solver | Vern9 | Relative tol=1e-3 |
+| ODE solver | Vern9 | Relative tol=1e-9 |
 | Grid size | 800×800 | 6.4M points |
 | Recurrence | 1000 steps | Attractor detection |
 
