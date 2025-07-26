@@ -1,4 +1,4 @@
-### ANALITYCA V.01
+## ANALITYCA V.01
 
 ```markdown
 # Dynamical Systems Analysis Suite
