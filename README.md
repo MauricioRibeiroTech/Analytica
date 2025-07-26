@@ -167,13 +167,3 @@ graph LR
     D --> F[Visualizations]
     D --> G[Entropy Metrics]
 ```
-
-This Markdown document includes:
-- Code blocks with syntax highlighting
-- Structured tables for parameters and outputs
-- Mermaid diagram for workflow visualization
-- Consistent section organization
-- All technical details from the original HTML
-
-Save this as `README.md` in your project repository for perfect GitHub rendering.
-```
