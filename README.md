@@ -35,7 +35,7 @@ end
 - Frequency sweep ω ∈ [0,1] with 100 steps
 - 800×800 grid resolution (-4.5 ≤ x,y ≤ 4.5)
 - Attractor detection via recurrence analysis
-- High-precision Vern9 ODE solver
+- High-precision Tsit() ODE solver
 
 ### Execution
 ```bash
