@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamical Systems Analysis Suite</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --success: #2ecc71;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 2rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1, h2, h3, h4 {
+            color: var(--primary);
+            margin-top: 1.5em;
+        }
+        
+        h1 {
+            border-bottom: 3px solid var(--secondary);
+            padding-bottom: 10px;
+        }
+        
+        h2 {
+            border-left: 5px solid var(--secondary);
+            padding-left: 15px;
+            margin-top: 2em;
+        }
+        
+        h3 {
+            color: var(--dark);
+        }
+        
+        code, pre {
+            background-color: #f0f0f0;
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        
+        pre {
+            padding: 15px;
+            overflow-x: auto;
+            border-left: 3px solid var(--secondary);
+            background-color: #f8f8f8;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .highlight {
+            background-color: #fffde7;
+            padding: 15px;
+            border-left: 4px solid #ffd600;
+            margin: 15px 0;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        th {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 3px 7px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: bold;
+            background-color: var(--secondary);
+            color: white;
+        }
+        
+        .diagram-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        footer {
+            margin-top: 50px;
+            text-align: center;
+            padding: 20px;
+            border-top: 1px solid #eee;
+            color: #777;
+        }
+        
+        .language-julia, .language-python {
+            background-color: #f5f5f5;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Dynamical Systems Analysis Suite</h1>
+        <p>A comprehensive toolkit for analyzing coupled nonlinear systems and their basin structures</p>
+        <div style="margin-top: 20px;">
+            <span class="badge">Julia</span>
+            <span class="badge">Python</span>
+            <span class="badge">Nonlinear Dynamics</span>
+            <span class="badge">Chaos Theory</span>
+        </div>
+    </header>
+
+    <section id="overview">
+        <h2>Project Overview</h2>
+        <div class="card">
+            <h3>Project Structure</h3>
+            <pre>📌 Project Structure:
+├── 2D_pendulo.jl          # Julia simulation core
+└── analisador_bacias_lote_v02.py  # Python analysis toolkit</pre>
+            
+            <div class="highlight">
+                <p>This suite combines Julia's high-performance numerical computing with Python's rich ecosystem for data analysis and visualization to study complex dynamical systems.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="part1">
+        <h2>Part 1: Coupled Pendulum Simulator (<code>2D_pendulo.jl</code>)</h2>
+        
+        <div class="card">
+            <h3>System Physics</h3>
+            <p>Simulates two nonlinearly coupled pendulums with periodic forcing:</p>
+            
+            <pre><code class="language-julia">@inbounds function ideia(u, par, t)
+    # System parameters
+    eps1 = eps2 = 1.0
+    α, β, δ = 2.0, -1.5, 1.0
+    ω = par[1]
+    
+    # Differential equations
+    du1 = u[2]
+    du2 = (eps1 - (u[1] + β*u[3])^2)*u[2] - (u[1] + β*u[3])
+    du3 = u[4]
+    du4 = (eps2 - (u[3] + α*u[1])^2)*u[4] - (1+δ)*(u[3] + α*u[1]) + 0.5*cos(ω*t)
+    
+    return SVector{4}(du1, du2, du3, du4)
+end</code></pre>
+        </div>
+        
+        <div class="grid">
+            <div class="card">
+                <h3>Key Features</h3>
+                <ul>
+                    <li>Frequency sweep ω ∈ [0,1] with 100 steps</li>
+                    <li>800×800 grid resolution (-4.5 ≤ x,y ≤ 4.5)</li>
+                    <li>Attractor detection via recurrence analysis</li>
+                    <li>High-precision Tsit() ODE solver</li>
+                </ul>
+            </div>
+            
+            <div class="card">
+                <h3>Execution</h3>
+                <pre><code class="language-bash">julia 2D_pendulo.jl</code></pre>
+                
+                <h4 style="margin-top: 20px;">Output Format</h4>
+                <pre><code>{index}_basins_.txt  # Matrix of basin IDs</code></pre>
+            </div>
+        </div>
+    </section>
+
+    <section id="part2">
+        <h2>Part 2: Basin Analysis Toolkit (<code>analisador_bacias_lote_v02.py</code>)</h2>
+        
+        <div class="card">
+            <h3>Core Functionality</h3>
+            <pre><code class="language-python">class AnalisadorBacias:
+    def __init__(self, arquivo_matriz):
+        self.matriz = np.loadtxt(arquivo_matriz)  # Load basin data
+    
+    # Main analysis methods
+    def calcular_estatisticas_basicas(self): → Dict
+    def identificar_fronteiras(self): → (boundary_matrix, counts)
+    def calcular_entropia_topologica(self): → Float
+    def gerar_grafico_fronteiras(self): → PNG</code></pre>
+        </div>
+        
+        <div class="card">
+            <h3>Analysis Pipeline</h3>
+            <ol>
+                <li><strong>Basic Statistics</strong>:
+                    <ul>
+                        <li>Basin area fractions</li>
+                        <li>Attractor counts</li>
+                    </ul>
+                </li>
+                <li><strong>Boundary Analysis</strong>:
+                    <ul>
+                        <li>Edge detection (3×3 neighborhood)</li>
+                        <li>Boundary density calculations</li>
+                    </ul>
+                </li>
+                <li><strong>Entropy Measures</strong>:
+                    <ul>
+                        <li>Topological entropy (spatial complexity)</li>
+                        <li>Boundary configuration entropy</li>
+                    </ul>
+                </li>
+            </ol>
+        </div>
+        
+        <div class="grid">
+            <div class="card">
+                <h3>Usage Example</h3>
+                <pre><code class="language-bash">python analisador_bacias_lote.py ./output_dir results.csv boundaries.csv</code></pre>
+            </div>
+            
+            <div class="card">
+                <h3>Output Files</h3>
+                <table>
+                    <tr>
+                        <th>File</th>
+                        <th>Contents</th>
+                    </tr>
+                    <tr>
+                        <td><code>results.csv</code></td>
+                        <td>Basin statistics</td>
+                    </tr>
+                    <tr>
+                        <td><code>boundaries.csv</code></td>
+                        <td>Boundary metrics</td>
+                    </tr>
+                    <tr>
+                        <td><code>probabilities.txt</code></td>
+                        <td>Attractor probabilities</td>
+                    </tr>
+                    <tr>
+                        <td><code>proporcao_fronteiras_visual.png</code></td>
+                        <td>Boundary plot</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <section id="specs">
+        <h2>Technical Specifications</h2>
+        
+        <div class="card">
+            <h3>Numerical Parameters</h3>
+            <table>
+                <tr>
+                    <th>Parameter</th>
+                    <th>Value</th>
+                    <th>Description</th>
+                </tr>
+                <tr>
+                    <td>ODE solver</td>
+                    <td>Vern9</td>
+                    <td>Relative tol=1e-9</td>
+                </tr>
+                <tr>
+                    <td>Grid size</td>
+                    <td>800×800</td>
+                    <td>6.4M points</td>
+                </tr>
+                <tr>
+                    <td>Recurrence</td>
+                    <td>1000 steps</td>
+                    <td>Attractor detection</td>
+                </tr>
+            </table>
+        </div>
+        
+        <div class="card">
+            <h3>Computational Requirements</h3>
+            <ul>
+                <li><strong>Memory</strong>: ~500MB per frequency point</li>
+                <li><strong>Storage</strong>: 1-10MB per output file</li>
+                <li><strong>Runtime</strong>: Minutes to hours depending on ω resolution</li>
+            </ul>
+        </div>
+    </section>
+
+    <section id="examples">
+        <h2>Example Results</h2>
+        
+        <div class="grid">
+            <div class="card">
+                <h3>Basin Probability Distribution</h3>
+                <pre><code>File: 42_basins_.txt
+Bacia 1: 0.372415
+Bacia 2: 0.591623
+Bacia 3: 0.035962</code></pre>
+            </div>
+            
+            <div class="card">
+                <h3>Boundary Visualization</h3>
+                <div style="background-color: #f0f0f0; padding: 20px; text-align: center; border-radius: 4px;">
+                    <p>[Boundary Fraction Plot]</p>
+                    <p><small>Example visualization of basin boundaries</small></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="development">
+        <h2>Development Notes</h2>
+        
+        <div class="grid">
+            <div class="card">
+                <h3>Dependencies</h3>
+                <pre><code>Julia Packages:
+- DynamicalSystems.jl
+- OrdinaryDiffEq.jl
+
+Python Packages:
+- NumPy, Matplotlib
+- SciPy, Pandas</code></pre>
+            </div>
+            
+            <div class="card">
+                <h3>Optimization Tips</h3>
+                <ol>
+                    <li>For quick tests:
+                        <pre><code class="language-julia"># In 2D_pendulo.jl:
+x0 = y0 = range(-4.5, 4.5, length=100)  # Reduced resolution</code></pre>
+                    </li>
+                    <li>Parallel execution:
+                        <pre><code class="language-bash"># Run Julia in parallel:
+julia -p 4 2D_pendulo.jl</code></pre>
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </section>
+
+    <section id="workflow">
+        <h2>System Workflow</h2>
+        <div class="diagram-container">
+            <div style="display: inline-block; background-color: white; padding: 20px; border-radius: 8px;">
+                <pre>graph LR
+    A[Parameter Setup] --> B[Julia Simulation]
+    B --> C[Basin Files]
+    C --> D[Python Analysis]
+    D --> E[Statistical Reports]
+    D --> F[Visualizations]
+    D --> G[Entropy Metrics]</pre>
+            </div>
+        </div>
+    </section>
+
+    <section id="references">
+        <h2>References</h2>
+        <div class="card">
+            <ol>
+                <li>Strogatz, S. H. (2018). <em>Nonlinear Dynamics and Chaos</em></li>
+                <li>DynamicalSystems.jl Documentation</li>
+                <li>Python Data Science Handbook (Jake VanderPlas)</li>
+            </ol>
+        </div>
+    </section>
+
+    <footer>
+        <p>Dynamical Systems Analysis Suite | Version V.01</p>
+        <p>© 2023 | ANILITYCA Project</p>
+    </footer>
+</body>
+</html>
